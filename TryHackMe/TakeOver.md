@@ -1,10 +1,10 @@
-# Futurevera - TryHackMe Walkthrough
+FutureVera CTF Walkthrough 🚀
+1. Initial Scanning 🔍
 
-## Reconnaissance
+The first step is always to identify open ports and services using nmap:
+Bash
 
-### Port Scanning
-```bash
-nmap -sV -nP 10.10.XX.XX
+nmap -sV -Pn 10.10.XX.XX
 
 Results:
 
@@ -14,69 +14,60 @@ Results:
 
     Port 443: HTTPS
 
-Domain Setup
-
-From description: futurevera.thm
-
-Add to /etc/hosts:
-bash
+The room description provides the domain: https://futurevera.thm. I mapped this IP to the domain in my hosts file:
+Bash
 
 sudo nano /etc/hosts
 # Add: 10.10.XX.XX futurevera.thm
 
-Subdomain Enumeration
-WFuzz Scan
-bash
+2. Website Inspection 🌐
 
-wfuzz -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -H "Host: FUZZ.futurevera.thm" https://futurevera.thm
+After opening https://futurevera.thm, the site didn't reveal much. However, a hint in the description mentioned, "we are rebuilding our support." This strongly suggests a support subdomain exists.
+3. Subdomain Hunting with WFuzz 🏹
 
-Too many 200 responses → Filter them:
-bash
+I used wfuzz to scan for hidden subdomains. My first attempt returned too many 200 OK responses, so I had to filter the results:
+Bash
 
+# Filtered scan to hide the noise
 wfuzz -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -H "Host: FUZZ.futurevera.thm" --hc 200 https://futurevera.thm
 
-Discovered:
+Found 2 subdomains:
 
     blog.futurevera.thm
 
     support.futurevera.thm
 
-Update /etc/hosts:
-bash
+I updated /etc/hosts again:
+Plaintext
 
 10.10.XX.XX blog.futurevera.thm
 10.10.XX.XX support.futurevera.thm
 
-Certificate Inspection
-Hidden Subdomain Discovery
+4. The Certificate Trick 🎟️
 
-Check SSL certificate for support.futurevera.thm:
+While blog was a dead end, support.futurevera.thm looked empty. I decided to inspect the SSL Certificate details (click the padlock icon in the browser).
 
-    Click padlock icon → Certificate
+Under the Subject Alternative Name (SAN), I found a hidden, long-form subdomain:
 
-    Check "Subject Alternative Name" field
+    DNS Name: ******desk934752.support.futurevera.thm
 
-Found: ******desk934752.support.futurevera.thm
-
-Add to /etc/hosts:
-bash
+I added this final domain to /etc/hosts:
+Bash
 
 10.10.XX.XX ******desk934752.support.futurevera.thm
 
-The Flag
-Error Message Analysis
+5. The "Aha!" Moment 💡
 
-Accessing the subdomain showed nothing. Try port 80:
-text
+Visiting the new subdomain via HTTPS resulted in a blank page. After some trial and error, I tried accessing it via Port 80 (HTTP):
 
 http://******desk934752.support.futurevera.thm:80
 
-Error message contained:
-text
+The page failed to load, but the error message leaked everything:
+Plaintext
 
-Hmm. Weâ€™re having trouble finding that site.
-We canâ€™t connect to the server at flag{***********}.s3-website-us-west-3.amazonaws.com.
+Hmm. We’re having trouble finding that site.
+We can’t connect to the server at flag{***********}.s3-website-us-west-3.amazonaws.com.
 
-🏁 Flag
+The subdomain was pointing to an AWS S3 bucket, and the bucket name itself was the flag!
 
-flag{***********}
+Flag: flag{***********} 🎉
