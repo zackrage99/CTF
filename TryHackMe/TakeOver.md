@@ -1,4 +1,5 @@
 FutureVera CTF Walkthrough 🚀
+
 ***URL:*** https://tryhackme.com/room/takeover
 1. Initial Scanning 🔍
 
