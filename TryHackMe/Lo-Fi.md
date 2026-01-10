@@ -1,4 +1,5 @@
 LOFI Room Walkthrough - TryHackMe
+
 ***Initial Reconnaissance***
 Nmap Scan
 
