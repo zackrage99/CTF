@@ -17,6 +17,7 @@ Results:
     Port 443: HTTPS
 
 The room description provides the domain: https://futurevera.thm. I mapped this IP to the domain in my hosts file:
+
 Bash
 
 sudo nano /etc/hosts
