@@ -1,5 +1,5 @@
 LOFI Room Walkthrough - TryHackMe
-Initial Reconnaissance
+***Initial Reconnaissance***
 Nmap Scan
 
 First, after launching the machine, I performed an Nmap scan to identify open ports and services:
@@ -13,7 +13,7 @@ Results:
 
     Port 22 (SSH) - SSH service (not explored further)
 
-Web Enumeration
+***Web Enumeration***
 
 Navigated to the web application at http://10.48.141.113
 
@@ -35,7 +35,7 @@ http://10.48.141.113/?page=../../../../etc/passwd
 
 Success! The server returned the contents of /etc/passwd, confirming the vulnerability.
 Flag Extraction
-Finding the Flag File
+***Finding the Flag File***
 
 Assuming the flag would be in the root directory or a standard location, I attempted:
 text
