@@ -1,5 +1,7 @@
 LOFI Room Walkthrough - TryHackMe
 
+***URL:*** https://tryhackme.com/room/lofi
+
 ### Initial Reconnaissance
 Nmap Scan
 
@@ -20,7 +22,7 @@ Lunch gobuster for web Enumeration :
 
 
 
-    gobuster dir -u http://10.48.141.113 -w /usr/share/wordlists//usr/share/wordlists/seclists/Discovery/Web-Content/common.txt
+    gobuster dir -u http://10.48.141.113 -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt
 
 Didn't find anything interesting here
 
