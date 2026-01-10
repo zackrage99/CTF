@@ -16,6 +16,7 @@ Results:
 
 ### Web Enumeration
 Lunch gobuster for web Enumeration :
+text
     gobuster dir -u http://10.48.141.113 -w /usr/share/wordlists//usr/share/wordlists/seclists/Discovery/Web-Content/common.txt
 
 Didn't find anything interesting here
