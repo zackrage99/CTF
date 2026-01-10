@@ -1,6 +1,4 @@
 LOFI Room Walkthrough - TryHackMe
-
-***URL:*** https://tryhackme.com/room/lofi
 Initial Reconnaissance
 Nmap Scan
 
