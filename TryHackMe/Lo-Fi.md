@@ -7,6 +7,7 @@ First, after launching the machine, I performed an Nmap scan to identify open po
 ```bash
 
 nmap -sV -nP 10.48.141.113
+```
 
 Results:
 
