@@ -28,7 +28,7 @@ After opening https://futurevera.thm, the site didn't reveal much. However, a hi
 3. Subdomain Hunting with WFuzz 🏹
 
 I used wfuzz to scan for hidden subdomains. My first attempt returned too many 200 OK responses, so I had to filter the results:
-Bash
+
 
 # Filtered scan to hide the noise
 wfuzz -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -H "Host: FUZZ.futurevera.thm" --hc 200 https://futurevera.thm
