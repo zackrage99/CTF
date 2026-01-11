@@ -227,6 +227,8 @@ bash
 whoami
 # Output: root
 
+
+
 Step 17: Final Flag - Root Flag
 bash
 
