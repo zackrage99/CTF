@@ -18,7 +18,7 @@ PORT   STATE SERVICE VERSION
 
 Nice! Three ports open: FTP, SSH, and HTTP.
 
-Step 2: Web Enumeration
+***Step 2:*** Web Enumeration
 
 While Nmap was running, I launched Gobuster to enumerate web directories:
 bash
@@ -28,7 +28,7 @@ gobuster dir -u http://10.49.163.41 -w /usr/share/wordlists/seclist/DNS/common.t
 But honestly, nothing interesting popped up here. Time to check the other services.
 📁 Phase 2: FTP Investigation
 
-Step 3: Anonymous FTP Login
+***Step 3:*** Anonymous FTP Login
 
 FTP port 21 is open, and vsftpd often allows anonymous login. Let's try:
 bash
@@ -43,7 +43,7 @@ Password: [Just press Enter - leave it blank]
 
 Success! We're in with anonymous access.
 
-Step 4: Exploring FTP
+***Step 4:*** Exploring FTP
 
 Let's see what's in here:
 bash
@@ -82,7 +82,7 @@ Ooh! This is gold! We now know:
 
 🔐 Phase 3: Initial Access Attempts
 
-Step 5: Trying SSH with Jake
+***Step 5:*** Trying SSH with Jake
 
 Let's try to SSH with Jake and some common weak passwords:
 bash
@@ -91,7 +91,7 @@ ssh jake@10.49.163.41
 
 Tried passwords: password, admin, 123456, jake, password123... nothing worked. Either the password isn't that common, or maybe Jake isn't the right user to target.
 🌐 Phase 4: Web Investigation
-Step 6: Checking the Website
+***Step 6:*** Checking the Website
 
 Let's visit http://10.49.163.41 in the browser. It's a simple Brooklyn Nine-Nine fan page.
 
@@ -103,7 +103,7 @@ html
 <!-- Have you ever heard of steganography? -->
 
 Bingo! Steganography hint! There's probably something hidden in an image on the site.
-Step 7: Finding the Image
+***Step 7:*** Finding the Image
 
 Looking at the page, there's a main image brooklyn99.jpg. Let's download it:
 bash
@@ -113,7 +113,7 @@ wget http://10.49.163.41/brooklyn99.jpg
 
 🖼️ Phase 5: Steganography Analysis
 
-Step 8: Checking for Hidden Data
+***Step 8:*** Checking for Hidden Data
 
 First, let's see if there's actually something hidden:
 bash
@@ -122,7 +122,7 @@ steghide info brooklyn99.jpg
 
 Output asks for a password. So there IS hidden data, but we need a password.
 
-Step 9: Cracking the Password
+***Step 9:*** Cracking the Password
 
 Stegseek is lightning fast for this:
 bash
@@ -137,7 +137,7 @@ text
 
 Wow! The password was just admin!
 
-Step 10: Extracting the Hidden File
+***Step 10:*** Extracting the Hidden File
 
 Now we can use steghide properly:
 bash
@@ -152,7 +152,7 @@ text
 wrote extracted data to "note.txt".
 
 
-Step 11: Reading the Note
+***Step 11:*** Reading the Note
 bash
 
 cat note.txt
@@ -165,14 +165,14 @@ holt password:
 
 Jackpot! We have Holt's password!
 🚪 Phase 6: Gaining Access
-Step 12: SSH as Holt
+***Step 12:*** SSH as Holt
 bash
 
 ssh holt@10.49.163.41
 
 Enter the password from note.txt, and... we're in!
 
-Step 13: First Flag - User Flag
+***Step 13:*** First Flag - User Flag
 bash
 
 ls
@@ -184,7 +184,8 @@ cat user.txt
 
 User Flag: {redacted_user_flag} ✅
 ⬆️ Phase 7: Privilege Escalation
-Step 14: Checking Sudo Privileges
+
+***Step 14:*** Checking Sudo Privileges
 
 Always check what you can run as sudo:
 bash
@@ -198,7 +199,8 @@ User holt may run the following commands on brooklyn99:
     (ALL) NOPASSWD: /bin/nano
 
 Interesting! We can run nano as root without a password!
-Step 15: Researching Nano Exploit
+
+***Step 15:*** Researching Nano Exploit
 
 Quick Google search: "nano sudo privilege escalation" or check GTFOBins:
 
@@ -217,7 +219,7 @@ Method:
 
     Enter command to spawn shell
 
-Step 16: Executing the Exploit
+***Step 16:*** Executing the Exploit
 bash
 
 sudo nano
