@@ -1,5 +1,6 @@
 Brooklyn Nine-Nine CTF Walkthrough
 🔍 Phase 1: Reconnaissance
+
 Step 1: Nmap Scan
 
 First, I started with an Nmap scan to see what ports are open:
