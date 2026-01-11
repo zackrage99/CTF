@@ -225,7 +225,7 @@ We now have a root shell! Let's verify:
 bash
 
 whoami
-# Output: root
+ ***Output: root***
 
 
 
