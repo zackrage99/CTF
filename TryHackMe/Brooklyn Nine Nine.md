@@ -17,6 +17,7 @@ PORT   STATE SERVICE VERSION
 80/tcp open  http    Apache httpd 2.4.29
 
 Nice! Three ports open: FTP, SSH, and HTTP.
+
 Step 2: Web Enumeration
 
 While Nmap was running, I launched Gobuster to enumerate web directories:
@@ -26,6 +27,7 @@ gobuster dir -u http://10.49.163.41 -w /usr/share/wordlists/seclist/DNS/common.t
 
 But honestly, nothing interesting popped up here. Time to check the other services.
 📁 Phase 2: FTP Investigation
+
 Step 3: Anonymous FTP Login
 
 FTP port 21 is open, and vsftpd often allows anonymous login. Let's try:
@@ -40,6 +42,7 @@ Username: anonymous
 Password: [Just press Enter - leave it blank]
 
 Success! We're in with anonymous access.
+
 Step 4: Exploring FTP
 
 Let's see what's in here:
@@ -78,6 +81,7 @@ Ooh! This is gold! We now know:
     There's someone named Holt who's an admin
 
 🔐 Phase 3: Initial Access Attempts
+
 Step 5: Trying SSH with Jake
 
 Let's try to SSH with Jake and some common weak passwords:
@@ -106,7 +110,9 @@ bash
 
 wget http://10.49.163.41/brooklyn99.jpg
 
+
 🖼️ Phase 5: Steganography Analysis
+
 Step 8: Checking for Hidden Data
 
 First, let's see if there's actually something hidden:
@@ -115,6 +121,7 @@ bash
 steghide info brooklyn99.jpg
 
 Output asks for a password. So there IS hidden data, but we need a password.
+
 Step 9: Cracking the Password
 
 Stegseek is lightning fast for this:
@@ -129,6 +136,7 @@ text
 [i] Extracting to "brooklyn99.jpg.out"
 
 Wow! The password was just admin!
+
 Step 10: Extracting the Hidden File
 
 Now we can use steghide properly:
@@ -142,6 +150,7 @@ Output:
 text
 
 wrote extracted data to "note.txt".
+
 
 Step 11: Reading the Note
 bash
@@ -162,6 +171,7 @@ bash
 ssh holt@10.49.163.41
 
 Enter the password from note.txt, and... we're in!
+
 Step 13: First Flag - User Flag
 bash
 
