@@ -1,7 +1,4 @@
 Brooklyn Nine-Nine CTF Walkthrough
-
-***URL:*** https://tryhackme.com/room/brooklynninenine
-
 🔍 Phase 1: Reconnaissance
 Step 1: Nmap Scan
 
@@ -238,18 +235,7 @@ ls
 cat root.txt
 
 Root Flag: {redacted_root_flag} ✅
-🎯 Summary of Attack Path
 
-    Recon → Found FTP, SSH, HTTP open
 
-    FTP → Anonymous login → Found note about weak password
 
-    Web → Source code hint about steganography
 
-    Steganography → Downloaded image → Cracked with stegseek → Found Holt's password
-
-    SSH → Logged in as Holt → Got user flag
-
-    Priv Esc → sudo -l showed nano access → Used nano to spawn root shell
-
-    Root → Grabbed root flag
