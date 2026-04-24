@@ -194,6 +194,8 @@ Read it:
 ```bash
 cat root.txt
 ```
+
+
 ![root flag](https://github.com/zackrage99/CTF/blob/main/images/Simple%20CTF/12.png)
 
 
