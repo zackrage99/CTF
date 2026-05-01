@@ -12,7 +12,9 @@ I started with an Nmap scan to identify open ports and running services:
 nmap -sV 10.112.182.210
 ```
 
+
 ![nmap scan](https://github.com/zackrage99/CTF/blob/main/images/CyberHeroes/nmap%20scan.png)
+
 
 The scan revealed two open ports:
 
@@ -116,12 +118,3 @@ I logged into the application successfully and obtained the flag.
 
 ---
 
-## Conclusion
-
-This challenge highlights:
-
-- The importance of **checking client-side code**
-- Why **hardcoding credentials in JavaScript is insecure**
-- Basic **enumeration and brute forcing techniques**
-
-Sometimes the easiest solution is just reading the source.
